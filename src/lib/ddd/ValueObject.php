@@ -1,6 +1,6 @@
 <?php
 class StringVO {
-  private $value; // string
+  protected $value; // string
   function __construct(string $value) {
        $this->value = $value;
    }
@@ -9,7 +9,7 @@ class StringVO {
    }
 }
 class DateTimeVO {
-  private $value; // DateTime
+  protected $value; // DateTime
   function __construct(DateTime $value) {
        $this->value = $value;
    }
