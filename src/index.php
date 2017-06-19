@@ -1,7 +1,7 @@
 <?php
 include_once "loader.php";
-$userRepository = new UserRepositoryImpl();
-var_dump($userRepository->auth(new UserId("admin"), new UserPassword("admin1")));
+$authRepository = new AuthRepositoryImpl(new JsonIO("./data/auth.json"));
+var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));
 // if(
 //   !isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
 //   || !$userRepository->auth(new UserId($_SERVER['PHP_AUTH_USER']), new UserPassword($_SERVER['PHP_AUTH_PW']))

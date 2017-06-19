@@ -31,8 +31,7 @@ class IssueContainer {
   function __construct(
     IssueTitle $issueTitle,
     IssueDescription $issueDescription,
-    IssueStatus $issueStatus,
-    UserId $userId
+    IssueStatus $issueStatus
   ) {
     eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
   }

@@ -1,8 +1,11 @@
 <?php
 class UserId extends StringVO {}
-class AuthedUserId extends UserId {}
+class AuthedUserId extends UserId {
+  function __construct(UserId $userId) {
+    $this->value = $userId->value;
+  }
+}
 class UserName extends StringVO {}
-class UserPassword extends StringVO {}
 
 class User {
   function __construct(
@@ -13,17 +16,7 @@ class User {
   }
 }
 
-class AuthedUser {
-  function __construct(
-    AuthedUserId $authedUserId,
-    User $user
-  ) {
-    eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
-  }
-}
-
 interface UserRepository {
   public function find(UserId $userId);
-  public function auth(UserId $userId, UserPassword $password);// true or false
-  public function updatePassword(AuthedUserId $authedUserId, UserPassword $userPassword);
+
 }
