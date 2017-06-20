@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class IssueId extends StringVO {}
 class IssueTitle extends StringVO {}
 class IssueDescription extends StringVO {}

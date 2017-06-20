@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 include_once "loader.php";
 $authRepository = new AuthRepositoryImpl(new JsonIO("./data/auth.json"));
 var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));

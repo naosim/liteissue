@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class IssueRepositoryImpl implements IssueRepository {
   function __construct(
     JsonIO $jsonIO,
@@ -9,7 +11,7 @@ class IssueRepositoryImpl implements IssueRepository {
 
   public function insert(IssueContainer $container) {
   }
-  
+
   public function findAll() {
   }
 }

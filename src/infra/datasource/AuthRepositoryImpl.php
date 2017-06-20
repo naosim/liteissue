@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class AuthRepositoryImpl implements AuthRepository {
   function __construct(
     JsonIO $jsonIO
@@ -6,7 +8,7 @@ class AuthRepositoryImpl implements AuthRepository {
     eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
   }
 
-  public function auth(UserId $userId, UserPassword $password) {
+  public function auth(UserId $userId, UserPassword $password): AuthedUserId {
     $json = $this->jsonIO->load();
 
     $userJson;

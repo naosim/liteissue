@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class StringVO {
   protected $value; // string
   function __construct(string $value) {

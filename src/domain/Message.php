@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class MessageId extends StringVO {}
 class MessageDescription extends StringVO {}
 class MessageCreateDateTime extends DateTimeVO {}

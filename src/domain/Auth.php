@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class UserPassword extends StringVO {}
 class AuthedUser {
   function __construct(
@@ -10,6 +12,6 @@ class AuthedUser {
 }
 
 interface AuthRepository {
-  public function auth(UserId $userId, UserPassword $password);// AuthedUserId or false
+  public function auth(UserId $userId, UserPassword $password): AuthedUserId;// AuthedUserId or false
   public function updatePassword(AuthedUserId $authedUserId, UserPassword $userPassword);
 }

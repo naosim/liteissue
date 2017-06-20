@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 function loadIn($path) {
   foreach(glob($path . '/*') as $file){
     if(is_file($file)){

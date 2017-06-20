@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 class UserId extends StringVO {}
 class AuthedUserId extends UserId {
   function __construct(UserId $userId) {
