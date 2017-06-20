@@ -32,6 +32,7 @@ function executeSql(string $dbfile, string $sql, $args) {
   $stmt = $pdo->prepare($sql);
   $stmt->execute($args);
   return $stmt;
+
 }
 
 function selectSql(string $dbfile, string $sql, $args) {

@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 include_once "loader.php";
-$authRepository = new AuthRepositoryImpl(new JsonIO("./data/auth.json"));
-var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));
+// $authRepository = new AuthRepositoryImpl(new JsonIO("./data/auth.json"));
+// var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));
 // if(
 //   !isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
 //   || !$userRepository->auth(new UserId($_SERVER['PHP_AUTH_USER']), new UserPassword($_SERVER['PHP_AUTH_PW']))
@@ -27,5 +27,11 @@ var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));
 //
 // $stmt = $pdo->prepare("SELECT * FROM sample");
 // $stmt->execute();
-$r2 = selectSql('sample.db', 'SELECT * FROM sample', []);
-var_dump($r2[0]['name']);
+// $r2 = selectSql('sample.db', 'SELECT * FROM sample', []);
+// var_dump($r2[0]['name']);
+$sqliteWrapperFactory = new SQLiteWrapperFactory();
+
+$IssueRepository = new IssueRepositoryImpl(
+  $sqliteWrapperFactory,
+  new AuthedUserId(new UserId('admin'))
+);

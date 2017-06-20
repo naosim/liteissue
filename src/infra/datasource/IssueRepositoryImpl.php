@@ -2,11 +2,21 @@
 declare(strict_types=1);
 
 class IssueRepositoryImpl implements IssueRepository {
+  private $sqlite;
+  private $authedUserId;
   function __construct(
-    JsonIO $jsonIO,
+    SQLiteWrapperFactory $sqliteWrapperFactory,
     AuthedUserId $authedUserId
   ) {
-    eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
+    logger_dump($sqliteWrapperFactory);
+    $this->sqlite = $sqliteWrapperFactory->create('issue.db');
+    $this->authedUserId = $authedUserId;
+
+    $this->sqlite->initTable('issue', function() {
+      $this->sqlite->executeSql('CREATE TABLE issue(title)', []);
+      logger_dump($this->sqlite);
+    });
+
   }
 
   public function insert(IssueContainer $container) {
