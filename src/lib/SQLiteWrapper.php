@@ -1,23 +1,22 @@
 <?php
 interface SQLiteWrapper {
-  function initTable(string $tableName, $createTableRunnable);
   function executeSql(string $sql, $args);
   function selectSql(string $sql, $args);
 }
 
 class SQLiteWrapperImpl implements SQLiteWrapper {
   private $dbfile;
-  function __constractor(string $dbfile) {
+  function __construct(string $dbfile) {
     $this->dbfile = $dbfile;
   }
 
-  function initTable(string $tableName, $createTableRunnable) {
+  function isTable(string $tableName) {
     try {
-      $this->executeSql("SELECT ROWID FROM ? WHERE ROWID = 1", [$tableName]);
+      $this->executeSql("SELECT ROWID FROM $tableName WHERE ROWID = 1", []);
+      return true;
     } catch(Exception $e) {
-      $createTableRunnable();
+      return false;
     }
-
   }
 
   function executeSql(string $sql, $args) {
@@ -34,8 +33,12 @@ class SQLiteWrapperImpl implements SQLiteWrapper {
     return $stmt;
   }
 
+  function getLastRowId(string $tableName) {
+    logger_dump($this->selectSql("SELECT ROWID FROM $tableName WHERE ROWID = last_insert_rowid()", []));
+  }
+
   function selectSql(string $sql, $args) {
-    $stmt = executeSql($sql, $args);
+    $stmt = $this->executeSql($sql, $args);
     return $stmt->fetchAll();
   }
 }
