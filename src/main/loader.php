@@ -6,24 +6,31 @@ function isTargetFile($file) {
     && strpos($file, '.php');
 }
 
-function loadIn($path) {
-
+function eachPhpFile($path, $callback) {
   foreach(glob($path . '/*') as $file){
-    if(is_file($file)){
-      if(isTargetFile($file)) {
-        include_once $file;
-      }
+    if(strpos($file, '.php')) {
+      // echo "$file<br>";
+      $callback($file);
     } else {
-      loadIn($file);
+      eachPhpFile($file, $callback);
     }
   }
 }
 
+function loadIn($path, $excludePhp = null) {
+  eachPhpFile($path, function($file) use ($excludePhp) {
+    if($excludePhp === null || strpos($file, $excludePhp) === false) {
+      include_once $file;
+    }
+
+  });
+}
+
 function load($root) {
-  loadIn($root . '/lib');
-  loadIn($root . '/domain');
-  loadIn($root . '/infra');
-  loadIn($root);
+  loadIn($root . '/lib', 'index.php');
+  loadIn($root . '/domain', 'index.php');
+  loadIn($root . '/infra', 'index.php');
+  loadIn($root, 'index.php');
 }
 
 // loadIn('./lib');

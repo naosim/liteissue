@@ -30,9 +30,9 @@ load('.');
 // $stmt->execute();
 // $r2 = selectSql('sample.db', 'SELECT * FROM sample', []);
 // var_dump($r2[0]['name']);
-$sqliteWrapperFactory = new SQLiteWrapperFactory();
-
-$IssueRepository = new IssueRepositoryImpl(
-  $sqliteWrapperFactory,
-  new AuthedUserId(new UserId('admin'))
-);
+// $sqliteWrapperFactory = new SQLiteWrapperFactory();
+//
+// $IssueRepository = new IssueRepositoryImpl(
+//   $sqliteWrapperFactory,
+//   new AuthedUserId(new UserId('admin'))
+// );
