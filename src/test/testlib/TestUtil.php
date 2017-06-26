@@ -9,27 +9,39 @@ class Test {
     assert_options(ASSERT_WARNING, 1);
     assert_options(ASSERT_QUIET_EVAL, 0);
     assert_options(ASSERT_EXCEPTION, 1);
-    $className = get_class($this);
-    echo "<h3>$className</h3>";
+    $result = [];
+    $className = new TestClassName(get_class($this));
     $this->setupAll();
     foreach (get_class_methods($this) as $methodName) {
       if(strpos($methodName, 'test') !== false) {
-        $this->_run($methodName);
+        $result[] = $this->_run($className, new TestMethodName($methodName));
       }
     }
     $this->cleanupAll();
+    return $result;
   }
-  private function _run($methodName) {
+  private function _run(TestClassName $testClassName, TestMethodName $testMethodName) {
     try {
       $this->setup();
+      $methodName = $testMethodName->getValue();
       $this->$methodName();
-      echo "<h4>$methodName OK</h4>";
+      return new TestResult(
+        $testClassName,
+        $testMethodName,
+        TestResultType::ok()
+      );
     } catch(Exception $e) {
-      echo "<h4>$methodName NG</h4>";
-      echo "<pre><code>$e</code></pre>";
+      return new TestResult(
+        $testClassName,
+        $testMethodName,
+        TestResultType::ng($e)
+      );
     } catch(Error $e) {
-      echo "<h4>$methodName NG</h4>";
-      echo "<pre><code>$e</code></pre>";
+      return new TestResult(
+        $testClassName,
+        $testMethodName,
+        TestResultType::ng($e)
+      );
     } finally {
       $this->cleanup();
     }
@@ -39,7 +51,7 @@ class Test {
 class TestClassName extends StringVO {}
 class TestMethodName extends StringVO {}
 class TestResultType extends StringVO {
-  private $ngReason;
+  public $ngReason;
 
   public function __construct(string $value, string $ngReason = null) {
     $this->value = $value;

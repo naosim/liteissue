@@ -6,12 +6,20 @@ load('./main');
 loadIn('./test/testlib');
 loadIn('./test');
 
-echo '<h1>TEST START</h1>';
-eachPhpFile('.', function($file) {
+$allTestResult = [];
+eachPhpFile('.', function($file) use(&$allTestResult) {
   if(strpos($file, 'Test.php') !== false) {
     $start = strrpos($file, '/') + 1;
     $length = strrpos($file, '.') - $start;
     $className = substr($file, $start, $length);
-    (new $className())->run();
+    $r = (new $className())->run();
+    $allTestResult = array_merge($allTestResult, $r);
+    // $allTestResult[] = $r;
   }
 });
+
+echo "<ul>";
+foreach($allTestResult as $r) {
+  echo "<li>{$r->testClassName->getValue()} {$r->testMethodName->getValue()} {$r->testResultType->getValue()} {$r->testResultType->getValue()} <pre><code>{$r->testResultType->ngReason}</pre></code></li>";
+}
+echo "</ul>";

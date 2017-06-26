@@ -11,7 +11,6 @@ class IssueRepositoryImplTest extends Test {
       $sqliteWrapperFactory,
       new AuthedUserId(new UserId('admin'))
     );
-
   }
 
   function test_hoge() {
