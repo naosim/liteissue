@@ -34,7 +34,7 @@ class SQLiteWrapperImpl implements SQLiteWrapper {
   }
 
   function getLastRowId(string $tableName) {
-    logger_dump($this->selectSql("SELECT ROWID FROM $tableName WHERE ROWID = last_insert_rowid()", []));
+    return $this->selectSql("SELECT ROWID FROM $tableName WHERE ROWID = last_insert_rowid()", []);
   }
 
   function selectSql(string $sql, $args) {

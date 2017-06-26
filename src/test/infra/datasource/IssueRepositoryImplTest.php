@@ -14,6 +14,6 @@ class IssueRepositoryImplTest extends Test {
   }
 
   function test_hoge() {
-    $sut = new IssueRepositoryImpl();
+    // $sut = new IssueRepositoryImpl();
   }
 }
