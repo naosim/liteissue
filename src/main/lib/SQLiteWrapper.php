@@ -29,7 +29,19 @@ class SQLiteWrapperImpl implements SQLiteWrapper {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $stmt = $pdo->prepare($sql);
-    $stmt->execute($args);
+
+    $ary = [];
+    foreach($args as $v) {
+      if(method_exists($v, 'getDbValue')) {
+        $ary[] = $v->getDbValue();
+      } else if(method_exists($v, 'getValue')) {
+        $ary[] = $v->getValue();
+      } else {
+        $ary[] = $v;
+      }
+    }
+
+    $stmt->execute($ary);
     return $stmt;
   }
 

@@ -19,4 +19,8 @@ class DateTimeVO {
    public function getValue() {
      return $this->value;
    }
+
+   public function getDbValue() {
+     return $this->value->getTimestamp();
+   }
 }

@@ -30,12 +30,29 @@ class Issue {
 }
 
 class IssueContainer {
+  private $issueTitle;
+  private $issueDescription;
+  private $issueStatus;
   function __construct(
     IssueTitle $issueTitle,
     IssueDescription $issueDescription,
     IssueStatus $issueStatus
   ) {
-    eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
+    $this->issueTitle = $issueTitle;
+    $this->issueDescription = $issueDescription;
+    $this->issueStatus = $issueStatus;
+  }
+
+  public function getIssueTitle(): IssueTitle {
+    return $this->issueTitle;
+  }
+
+  public function getIssueDescription(): IssueDescription {
+    return $this->issueDescription;
+  }
+
+  public function getIssueStatus(): IssueStatus {
+    return $this->issueStatus;
   }
 }
 
