@@ -36,6 +36,8 @@ class SQLiteWrapperImpl implements SQLiteWrapper {
         $ary[] = $v->getDbValue();
       } else if(method_exists($v, 'getValue')) {
         $ary[] = $v->getValue();
+      } else if(method_exists($v, 'getTimestamp')) {
+        $ary[] = $v->getTimestamp();
       } else {
         $ary[] = $v;
       }

@@ -3,13 +3,16 @@ declare(strict_types=1);
 
 class IssueRepositoryImpl implements IssueRepository {
   private $sqlite;
+  private $dateTimeFactory;
   private $authedUserId;
   public static $DB_FILE = './data/db/issue.db';
   function __construct(
     SQLiteWrapperFactory $sqliteWrapperFactory,
+    DateTimeFactory $dateTimeFactory,
     AuthedUserId $authedUserId
   ) {
     $this->sqlite = $sqliteWrapperFactory->create(self::$DB_FILE);
+    $this->dateTimeFactory = $dateTimeFactory;
     $this->authedUserId = $authedUserId;
 
     if(!$this->sqlite->isTable('issue')) {
@@ -31,11 +34,12 @@ class IssueRepositoryImpl implements IssueRepository {
       $container->getIssueDescription(),
       $container->getIssueStatus(),
       $this->authedUserId,
-      new DateTimeVO(new DateTime())
+      $this->dateTimeFactory->createUnixDateTime()
     ]);
   }
 
   public function findAll() {
-    return $this->sqlite->selectSql('SELECT * FROM issue', []);
+    $result = $this->sqlite->selectSql('SELECT * FROM issue', []);
+    return $result[0]['id'];
   }
 }

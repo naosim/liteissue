@@ -13,6 +13,7 @@ class IssueRepositoryImplTest extends Test {
     $sqliteWrapperFactory = new SQLiteWrapperFactory();
     $this->issueRepository = new IssueRepositoryImpl(
       $sqliteWrapperFactory,
+      new DateTimeFactoryImpl(),
       new AuthedUserId(new UserId('admin'))
     );
   }
