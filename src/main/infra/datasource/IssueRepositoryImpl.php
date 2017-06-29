@@ -23,11 +23,6 @@ class IssueRepositoryImpl implements IssueRepository {
   }
 
   public function insert(IssueContainer $container) {
-    /*
-    IssueTitle $issueTitle,
-    IssueDescription $issueDescription,
-    IssueStatus $issueStatus
-    */
     $insert = "INSERT INTO issue(title, description, status, user_id, timestamp) VALUES (?, ?, ?, ?, ?)";
     $this->sqlite->executeSql($insert, [
       $container->getIssueTitle(),
@@ -38,8 +33,34 @@ class IssueRepositoryImpl implements IssueRepository {
     ]);
   }
 
-  public function findAll() {
+  public function findAll(): Stream {
+     function convert($map) {
+      return new Issue(
+        new IssueId($map['id']),
+        new IssueTitle($map['title']),
+        new IssueDescription($map['description']),
+        new IssueCreateDateTime(new DateTime()),
+        $map['status'] == 'open' ? new IssueStatusOpen() : new IssueStatusClose(),
+        new UserId($map['user_id'])
+      );
+    }
+
     $result = $this->sqlite->selectSql('SELECT * FROM issue', []);
-    return $result[0]['id'];
+    return Stream::ofAll($result)
+    ->map(convert);
   }
 }
+
+/*
+class Issue {
+  function __construct(
+    IssueId $issueId,
+    IssueTitle $issueTitle,
+    IssueDescription $issueDescription,
+    IssueCreateDateTime $issueCreateDateTime,
+    IssueStatus $issueStatus,
+    UserId $userId
+  ) {
+    eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
+  }
+}*/
