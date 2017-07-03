@@ -24,6 +24,7 @@ class IssueRepositoryImpl implements IssueRepository {
 
   public function insert(IssueContainer $container) {
     $insert = "INSERT INTO issue(title, description, status, user_id, timestamp) VALUES (?, ?, ?, ?, ?)";
+    logger_dump($insert);
     $this->sqlite->executeSql($insert, [
       $container->getIssueTitle(),
       $container->getIssueDescription(),
@@ -34,20 +35,33 @@ class IssueRepositoryImpl implements IssueRepository {
   }
 
   public function findAll(): Stream {
-     function convert($map) {
+    // function convert($map) {
+    //   $a = $map['timestamp'];
+    //   $u = new UnixTimestampVO($a);
+      // $d = $u->toDateTime();
+      // return new Issue(
+      //   new IssueId($map['id']),
+      //   new IssueTitle($map['title']),
+      //   new IssueDescription($map['description']),
+      //   new IssueCreateDateTime($d),
+      //   $map['status'] == 'open' ? new IssueStatusOpen() : new IssueStatusClose(),
+      //   new UserId($map['user_id'])
+      // );
+    // }
+
+    $result = $this->sqlite->selectSql('SELECT * FROM issue', []);
+    return Stream::ofAll($result)
+    ->map(function($map){
+      $d = (new UnixTimestampVO((int)$map['timestamp']))->toDateTime();
       return new Issue(
         new IssueId($map['id']),
         new IssueTitle($map['title']),
         new IssueDescription($map['description']),
-        new IssueCreateDateTime(new DateTime()),
+        new IssueCreateDateTime($d),
         $map['status'] == 'open' ? new IssueStatusOpen() : new IssueStatusClose(),
         new UserId($map['user_id'])
       );
-    }
-
-    $result = $this->sqlite->selectSql('SELECT * FROM issue', []);
-    return Stream::ofAll($result)
-    ->map(convert);
+    });
   }
 }
 

@@ -14,6 +14,79 @@ load('.');
 //   die('このページを見るにはログインが必要です');
 // }
 
+// setup
+$sqliteWrapperFactory = new SQLiteWrapperFactory();
+$issueRepository = new IssueRepositoryImpl(
+  $sqliteWrapperFactory,
+  new DateTimeFactoryImpl(),
+  new AuthedUserId(new UserId('admin'))
+);
+
+
+// API
+function get_get() {
+  echo json_encode("hoge");
+}
+
+function get_issues() {
+  global $issueRepository;
+  var_dump($issueRepository->findAll()->toArray());
+}
+
+function post_issues() {
+  var_dump("aa");
+  global $issueRepository;
+  $title = $_GET["title"];
+  $description = $_GET["description"];
+  $status = "open";
+
+  $c = new IssueContainer(
+    new IssueTitle($title),
+    new IssueDescription($description),
+    new IssueStatusOpen()
+  );
+
+
+  var_dump($issueRepository->insert($c));
+}
+
+
+
+
+
+
+
+if(
+  !isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
+  || $_SERVER['PHP_AUTH_USER'] !== 'admin'
+  || $_SERVER['PHP_AUTH_PW'] !== 'admin') {
+  header('WWW-Authenticate: Basic realm="Enter username and password."');
+  header('Content-Type: text/plain; charset=utf-8');
+  die('このページを見るにはログインが必要です');
+}
+
+function getMethod() {
+  if(!isset($_GET["method"])) {
+    return false;
+  }
+  $type = strtolower($_SERVER["REQUEST_METHOD"]);
+  $methodName = $type . "_" . $_GET["method"];
+  if(!function_exists($methodName)) {
+    return false;
+  }
+  return $methodName;
+}
+
+$method = getMethod();
+if(!$method) {
+  echo file_get_contents('public/form.html');
+  exit();
+}
+
+header('Content-Type: application/json; charset=utf-8');
+$method();
+
+
 // $handle = sqlite_open('sample.db');
 // sqlite_query($handle, 'create table sample(name TEXT)');
 // var_dump(sqlite_query($handle, 'select * from sample'));
