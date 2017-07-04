@@ -17,6 +17,7 @@ class IssueStatusClose implements IssueStatus {
 }
 
 class Issue {
+  private $issueStatus;
   function __construct(
     IssueId $issueId,
     IssueTitle $issueTitle,
@@ -26,6 +27,18 @@ class Issue {
     UserId $userId
   ) {
     eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
+    $this->issueStatus = $issueStatus;
+  }
+
+  public function toMap() {
+    return array(
+      'issueId' => $this->issueId->getValue(),
+      'issueTitle' => $this->issueTitle->getValue(),
+      'issueDescription' => $this->issueDescription->getValue(),
+      'issueCreateDateTime' => $this->issueCreateDateTime->getApiValue(),
+      'issueStatus' => $this->issueStatus->getValue(),
+      'userId' => $this->userId->getValue(),
+    );
   }
 }
 

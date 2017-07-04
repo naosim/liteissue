@@ -35,20 +35,6 @@ class IssueRepositoryImpl implements IssueRepository {
   }
 
   public function findAll(): Stream {
-    // function convert($map) {
-    //   $a = $map['timestamp'];
-    //   $u = new UnixTimestampVO($a);
-      // $d = $u->toDateTime();
-      // return new Issue(
-      //   new IssueId($map['id']),
-      //   new IssueTitle($map['title']),
-      //   new IssueDescription($map['description']),
-      //   new IssueCreateDateTime($d),
-      //   $map['status'] == 'open' ? new IssueStatusOpen() : new IssueStatusClose(),
-      //   new UserId($map['user_id'])
-      // );
-    // }
-
     $result = $this->sqlite->selectSql('SELECT * FROM issue', []);
     return Stream::ofAll($result)
     ->map(function($map){

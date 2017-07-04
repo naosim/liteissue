@@ -22,22 +22,26 @@ $issueRepository = new IssueRepositoryImpl(
   new AuthedUserId(new UserId('admin'))
 );
 
-
 // API
 function get_get() {
-  echo json_encode("hoge");
+  return "hoge";
+}
+
+function get_throw() {
+  throw new RuntimeException("ぷぎゃー");
 }
 
 function get_issues() {
   global $issueRepository;
-  var_dump($issueRepository->findAll()->toArray());
+  $stream = $issueRepository->findAll();
+  return $stream->map(function($v){ return $v->toMap(); })->toArray();
 }
 
 function post_issues() {
   var_dump("aa");
   global $issueRepository;
-  $title = $_GET["title"];
-  $description = $_GET["description"];
+  $title = $_POST["title"];
+  $description = $_POST["description"];
   $status = "open";
 
   $c = new IssueContainer(
@@ -46,15 +50,9 @@ function post_issues() {
     new IssueStatusOpen()
   );
 
-
   var_dump($issueRepository->insert($c));
+  return "hoge";
 }
-
-
-
-
-
-
 
 if(
   !isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
@@ -84,7 +82,13 @@ if(!$method) {
 }
 
 header('Content-Type: application/json; charset=utf-8');
-$method();
+try {
+  echo json_encode(ResponseUtil::ok($method()));
+} catch(RuntimeException $e) {
+  http_response_code(500);
+  echo json_encode(ResponseUtil::ng($e));
+}
+
 
 
 // $handle = sqlite_open('sample.db');

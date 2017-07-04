@@ -13,11 +13,16 @@ class StringVO {
 class DateTimeVO {
   protected $value; // DateTime
   function __construct(DateTime $value) {
+      $value->setTimeZone( new DateTimeZone('Asia/Tokyo'));
        $this->value = $value;
    }
 
    public function getValue(): DateTime {
      return $this->value;
+   }
+
+   public function getApiValue(): String {
+     return $this->value->format(DateTime::ISO8601);
    }
 
    public function getDbValue(): int {

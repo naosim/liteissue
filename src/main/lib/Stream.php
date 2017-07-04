@@ -43,6 +43,10 @@ class Stream {
     return $this->ary;
   }
 
+  function toJson() {
+    return json_encode($this->toArray());
+  }
+
   function count(): int {
     return count($this->ary);
   }
