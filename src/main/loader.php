@@ -20,11 +20,12 @@ function includeFromWeb($url, $root = '.') {
 }
 
 function setupInclude($root) {
+  $myGistUrl = 'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw';
   includeFromWeb('https://gist.githubusercontent.com/naosim/4492b8054564f13998fa51be03ec0340/raw/EasyInclude.php', $root);
   (new EasyInclude($root, 'index.php'))->load(
-    'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/Stream.php',
-    'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/SQLiteWrapper.php',
-    'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/DateTimeFactory.php',
+    "$myGistUrl/Stream.php",
+    "$myGistUrl/SQLiteWrapper.php",
+    "$myGistUrl/DateTimeFactory.php",
     '/lib',
     '/domain',
     '/infra',
