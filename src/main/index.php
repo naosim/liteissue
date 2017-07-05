@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 include_once "loader.php";
-load('.');
+setupInclude('.');
 // $authRepository = new AuthRepositoryImpl(new JsonIO("./data/auth.json"));
 // var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));
 // if(

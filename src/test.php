@@ -2,15 +2,15 @@
 declare(strict_types=1);
 include_once "main/loader.php";
 
-load('./main');
-(new WebDependenceLoad('.', null))->load(
+setupInclude('./main');
+(new EasyInclude('.', null))->load(
   'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/TestUtil.php',
   // '/test/testlib',
   '/test'
 );
 
 $allTestResult = [];
-WebDependenceLoad::eachPhpFile('.', function($file) use(&$allTestResult) {
+EasyInclude::eachPhpFile('.', function($file) use(&$allTestResult) {
   if(strpos($file, 'Test.php') !== false) {
     $start = strrpos($file, '/') + 1;
     $length = strrpos($file, '.') - $start;
