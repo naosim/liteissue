@@ -3,11 +3,14 @@ declare(strict_types=1);
 include_once "main/loader.php";
 
 load('./main');
-loadIn('./test/testlib');
-loadIn('./test');
+(new WebDependenceLoad('.', null))->load(
+  'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/TestUtil.php',
+  // '/test/testlib',
+  '/test'
+);
 
 $allTestResult = [];
-eachPhpFile('.', function($file) use(&$allTestResult) {
+WebDependenceLoad::eachPhpFile('.', function($file) use(&$allTestResult) {
   if(strpos($file, 'Test.php') !== false) {
     $start = strrpos($file, '/') + 1;
     $length = strrpos($file, '.') - $start;
