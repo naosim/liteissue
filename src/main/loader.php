@@ -24,6 +24,7 @@ function setupInclude($root) {
   (new EasyInclude($root, 'index.php'))->load(
     'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/Stream.php',
     'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/SQLiteWrapper.php',
+    'https://gist.githubusercontent.com/naosim/ba8300f7cc70f7ee4a8bbc1b9f43b45f/raw/DateTimeFactory.php',
     '/lib',
     '/domain',
     '/infra',
