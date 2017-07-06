@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 include_once "loader.php";
 setupInclude('.');
-
-Logger::log("hoge");
-Logger::dump("hoge");
-exit();
+//
+// Logger::log("hoge");
+// Logger::dump("hoge");
+// exit();
 
 // $authRepository = new AuthRepositoryImpl(new JsonIO("./data/auth.json"));
 // var_dump($authRepository->auth(new UserId("admin"), new UserPassword("admin")));
@@ -43,7 +43,6 @@ function get_issues() {
 }
 
 function post_issues() {
-  var_dump("aa");
   global $issueRepository;
   $title = $_POST["title"];
   $description = $_POST["description"];
@@ -54,9 +53,8 @@ function post_issues() {
     new IssueDescription($description),
     new IssueStatusOpen()
   );
-
-  var_dump($issueRepository->insert($c));
-  return "hoge";
+  $issueRepository->insert($c);
+  return 'ok';
 }
 
 if(

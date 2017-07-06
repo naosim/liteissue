@@ -1,10 +1,38 @@
 <!DOCTYPE html>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<style>
+td {
+  padding: 4px;
+  line-height: 1.0em;
+  white-space: pre;
+}
+</style>
 
 <h1>form</h1>
-
+<div id="data"></div>
 <form action="index.php?method=issues" method="POST">
-  <input name="title" />
-  <input name="description" />
-  <input type="submit" />
+  <input name="title" /><br>
+  <textarea name="description" ></textarea><br>
+  <input type="submit" /><br>
 </form>
+
+<script>
+axios.get('http://localhost:8080/main/index.php?method=issues')
+  .then(function (response) {
+    var result = response.data.result;
+    console.log(result);
+    var html = '<table border=1><th>#</th><th>件名</th><th>内容</th><th>投稿者</th><th>状態</th>'
+    + result
+      .map(issue => [issue.issueId, issue.issueTitle, issue.issueDescription, issue.userId, issue.issueStatus])
+      .map(ary => ary.map(v => `<td>${v}</td>`).join(''))
+      .map(v => `<tr>${v}</tr>`)
+      .join('')
+    + '</table>';
+    console.log(html)
+
+    document.querySelector('#data').innerHTML = html;
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+</script>

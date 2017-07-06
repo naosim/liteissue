@@ -24,7 +24,6 @@ class IssueRepositoryImpl implements IssueRepository {
 
   public function insert(IssueContainer $container) {
     $insert = "INSERT INTO issue(title, description, status, user_id, timestamp) VALUES (?, ?, ?, ?, ?)";
-    logger_dump($insert);
     $this->sqlite->executeSql($insert, [
       $container->getIssueTitle(),
       $container->getIssueDescription(),
