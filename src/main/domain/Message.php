@@ -20,7 +20,6 @@ class Message {
 class MessageContainer {
   function __construct(
     IssueId $issueId,
-    UserId $userId,
     MessageDescription $messageDescription
   ) {
     eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
