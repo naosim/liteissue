@@ -1,6 +1,60 @@
 <?php
 declare(strict_types=1);
 
+class Mapper {
+  static function toDbMap(...$args) {
+    $ary = [];
+    foreach($args as $v) {
+      $c = get_class($v);
+      $key = strtolower(substr($c, 0, 1)) . substr($c, 1);
+      if(method_exists($v, 'getDbValue')) {
+        $ary[$key] = $v->getDbValue();
+      } else if(method_exists($v, 'getValue')) {
+        $ary[$key] = $v->getValue();
+      } else if(method_exists($v, 'getTimestamp')) {
+        $ary[$key] = $v->getTimestamp();
+      } else {
+        $ary[$key] = $v;
+      }
+    }
+    return $ary;
+  }
+
+  static function toApiMap(...$args) {
+    $ary = array();
+    foreach($args as $v) {
+      $c = get_class($v);
+      $key = strtolower(substr($c, 0, 1)) . substr($c, 1);
+      if(method_exists($v, 'getApiValue')) {
+        $ary[$key] = $v->getApiValue();
+      } else if(method_exists($v, 'getValue')) {
+        $ary[$key] = $v->getValue();
+      } else {
+        $ary[$key] = $v;
+      }
+    }
+    return $ary;
+  }
+}
+
+class Required {
+  static function get($key) {
+    if(!isset($_GET[$key])) {
+      throw new RuntimeException("必須パラメータ: $key");
+    }
+    return $_GET[$key];
+  }
+
+  static function post($key) {
+    if(!isset($_POST[$key])) {
+      throw new RuntimeException("必須パラメータ: $key");
+    }
+    return $_POST[$key];
+  }
+}
+
+
+
 include_once "loader.php";
 setupInclude('.');
 //
@@ -20,11 +74,18 @@ setupInclude('.');
 // }
 
 // setup
+$authedUserId = new AuthedUserId(new UserId('admin'));
+
 $sqliteWrapperFactory = new SQLiteWrapperFactory();
 $issueRepository = new IssueRepositoryImpl(
   $sqliteWrapperFactory,
   new DateTimeFactoryImpl(),
-  new AuthedUserId(new UserId('admin'))
+  $authedUserId
+);
+$messageRepository = new MessageRepositoryImpl(
+  $sqliteWrapperFactory,
+  new DateTimeFactoryImpl(),
+  $authedUserId
 );
 
 // API
@@ -44,17 +105,29 @@ function get_issues() {
 
 function post_issues() {
   global $issueRepository;
-  $title = $_POST["title"];
-  $description = $_POST["description"];
   $status = "open";
 
   $c = new IssueContainer(
-    new IssueTitle($title),
-    new IssueDescription($description),
+    new IssueTitle(Required::post('title')),
+    new IssueDescription(Required::post('description')),
     new IssueStatusOpen()
   );
   $issueRepository->insert($c);
   return 'ok';
+}
+
+function get_messages() {
+  global $messageRepository;
+  $issueId = new IssueId(Required::get('issue_id'));
+  $stream = $messageRepository->findAll($issueId);
+  return $stream->map(function($v){ return $v->toApiMap(); })->toArray();
+}
+
+function post_messages() {
+  global $messageRepository;
+  $issueId = new IssueId(Required::get('issue_id'));
+  $stream = $messageRepository->findAll($issueId);
+  return $stream->map(function($v){ return $v->toApiMap(); })->toArray();
 }
 
 if(

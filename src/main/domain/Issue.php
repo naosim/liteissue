@@ -31,13 +31,13 @@ class Issue {
   }
 
   public function toMap() {
-    return array(
-      'issueId' => $this->issueId->getValue(),
-      'issueTitle' => $this->issueTitle->getValue(),
-      'issueDescription' => $this->issueDescription->getValue(),
-      'issueCreateDateTime' => $this->issueCreateDateTime->getApiValue(),
-      'issueStatus' => $this->issueStatus->getValue(),
-      'userId' => $this->userId->getValue(),
+    return Mapper::toApiMap(
+      $this->issueId,
+      $this->issueTitle,
+      $this->issueDescription,
+      $this->issueCreateDateTime,
+      $this->issueStatus,
+      $this->userId
     );
   }
 }

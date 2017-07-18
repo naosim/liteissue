@@ -15,6 +15,16 @@ class Message {
   ) {
     eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
   }
+
+  public function toApiMap() {
+    return Mapper::toApiMap(
+      $this->messageId,
+      $this->issueId,
+      $this->userId,
+      $this->messageDescription,
+      $this->messageCreateDateTime
+    );
+  }
 }
 
 class MessageContainer {
