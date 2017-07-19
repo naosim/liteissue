@@ -125,9 +125,11 @@ function get_messages() {
 
 function post_messages() {
   global $messageRepository;
-  $issueId = new IssueId(Required::get('issue_id'));
-  $stream = $messageRepository->findAll($issueId);
-  return $stream->map(function($v){ return $v->toApiMap(); })->toArray();
+  $messageRepository->insert(new MessageContainer(
+    new IssueId(Required::post('issue_id')),
+    new MessageDescription(Required::post('message_description'))
+  ));
+  return array('result' => 'ok');
 }
 
 if(
