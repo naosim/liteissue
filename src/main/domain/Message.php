@@ -34,6 +34,14 @@ class MessageContainer {
   ) {
     eachArgs(func_get_args(), function($k, $v){ $this->$k = $v; });
   }
+
+  function getIssueId(): IssueId {
+    return $this->issueId;
+  }
+
+  function getMessageDescription(): MessageDescription {
+    return $this->messageDescription;
+  }
 }
 
 interface MessageRepository {
