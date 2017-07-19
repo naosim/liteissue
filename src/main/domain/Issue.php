@@ -31,14 +31,15 @@ class Issue {
   }
 
   public function toMap() {
-    return Mapper::toApiMap(
+    $map = Mapper::toApiMap(
       $this->issueId,
       $this->issueTitle,
       $this->issueDescription,
       $this->issueCreateDateTime,
-      $this->issueStatus,
       $this->userId
     );
+    $map['issueStatus'] = $this->issueStatus->getValue();
+    return $map;
   }
 }
 
