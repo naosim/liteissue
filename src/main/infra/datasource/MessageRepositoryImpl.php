@@ -23,9 +23,9 @@ class MessageRepositoryImpl implements MessageRepository {
   }
 
   public function insert(MessageContainer $container) {
-    $insert = "INSERT INTO issue(description, user_id, issue_id, timestamp) VALUES (?, ?, ?, ?)";
+    $insert = "INSERT INTO message(description, user_id, issue_id, timestamp) VALUES (?, ?, ?, ?)";
     $this->sqlite->executeSql($insert, [
-      $container->getIssueDescription(),
+      $container->getMessageDescription(),
       $this->authedUserId,
       $container->getIssueId(),
       $this->dateTimeFactory->createUnixDateTime()
