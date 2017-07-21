@@ -132,6 +132,20 @@ function post_messages() {
   return array('result' => 'ok');
 }
 
+function get_all() {
+  global $issueRepository;
+  global $messageRepository;
+
+  $stream = $issueRepository->findAll();
+  return $stream->map(function($v) use($messageRepository) {
+    $messageStream = $messageRepository->findAll($v->issueId);
+
+    $map = $v->toMap();
+    $map['messages'] = $messageStream->map(function($v){ return $v->toApiMap(); })->toArray();
+     return $map;
+   })->toArray();
+}
+
 if(
   !isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
   || $_SERVER['PHP_AUTH_USER'] !== 'admin'
