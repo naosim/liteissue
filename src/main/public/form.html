@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue"></script>
 <style>
 td {
   padding: 4px;
@@ -23,13 +24,40 @@ td {
   <input type="submit" /><br>
 </form>
 
+<div id="app">
+  <table>
+    <tr><th>#</th><th>件名</th><th>内容</th><th>投稿者</th><th>状態</th></tr>
+  <tr v-for="issue in data">
+    <td>{{ issue.issueId }}</td>
+    <td>{{ issue.issueTitle }}</td>
+    <td>{{ issue.issueDescription }}</td>
+    <td>{{ issue.userId }}</td>
+    <td>{{ issue.issueStatus }}</td>
 
+    <td v-for="message in issue.messages">
+      <span>{{ message.messageDescription }}</span>
+    </td>
+
+  </tr>
+</table>
+</div>
 
 
 <script>
+var models = {
+  data: []
+}
+var app = new Vue({
+  el: '#app',
+  data: models
+})
+
+
 axios.get('http://localhost:8080/main/index.php?method=all')
   .then(function (response) {
     var result = response.data.result;
+
+    models.data = result;
     // メッセージ数の最大
     var maxMessageCount = 1 + result.map(v => v.messages.length).reduce((v, memo) => Math.max(v, memo), 0);
     var th = '';
