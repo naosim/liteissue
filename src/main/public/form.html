@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="css/skyblue.css">
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/vue"></script>
 <style>
@@ -25,19 +26,25 @@ td {
 </form>
 
 <div id="app">
-  <table>
-    <tr><th>#</th><th>件名</th><th>内容</th><th>投稿者</th><th>状態</th></tr>
+  <table class="table">
+    <tr><th>#</th><th>件名</th><th>状態</th></tr>
   <tr v-for="issue in data">
     <td>{{ issue.issueId }}</td>
     <td>{{ issue.issueTitle }}</td>
-    <td>{{ issue.issueDescription }}</td>
-    <td>{{ issue.userId }}</td>
     <td>{{ issue.issueStatus }}</td>
-
+    <td><code>{{ issue.issueDescription }}</code><div>{{ issue.userId }} {{issue.issueCreateDateTime}}</div></td>
     <td v-for="message in issue.messages">
-      <span>{{ message.messageDescription }}</span>
+      <code>{{ message.messageDescription }}</code><div>{{ message.userId }}</div>
     </td>
 
+  </tr>
+  <tr>
+    <form action="main/index.php?method=issues" method="POST">
+    <td>ADD</td>
+    <td><input name="title" /></td>
+    <td><textarea name="message_description" ></textarea></td>
+    <td><input class="btn" type="submit" /></td>
+    </from>
   </tr>
 </table>
 </div>
@@ -58,27 +65,8 @@ axios.get('http://localhost:8080/main/index.php?method=all')
     var result = response.data.result;
 
     models.data = result;
+    console.log(result);
     // メッセージ数の最大
-    var maxMessageCount = 1 + result.map(v => v.messages.length).reduce((v, memo) => Math.max(v, memo), 0);
-    var th = '';
-    for(var i = 0; i < maxMessageCount; i++) {
-      th += '<th>メッセージ</th>';
-    }
-
-    var html = '<table border=1><th>#</th><th>件名</th><th>内容</th><th>投稿者</th><th>状態</th>'
-    + th
-    + result
-      .map(issue => {
-        var issueHtml = [issue.issueId, issue.issueTitle, issue.issueDescription, issue.userId, issue.issueStatus].map(a => `<td>${a}</td>`).join('');
-        var messagesHtml = issue.messages.map(m => '<td>' + m.messageDescription + '</td>').join('');
-        var messageForm = `<td><form action="index.php?method=messages" method="POST"><input type="hidden" name="issue_id" value="${issue.issueId}" /><br><textarea name="message_description" ></textarea><br><input type="submit" /><br></form></td>`;
-        return issueHtml + messagesHtml + messageForm;
-      })
-      .map(v => `<tr>${v}</tr>`)
-      .join('')
-    + '</table>';
-    console.log(html);
-    document.querySelector('#data').innerHTML = html;
   })
   .catch(function (error) {
     console.log(error);
